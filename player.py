@@ -6,7 +6,7 @@ wn = pygame.display.set_mode((650, 750))
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('img\player.png')
+        self.image = pygame.image.load('img/player.png')
         self.x = 0
         self.y = 0
         self.rect = self.image.get_rect()

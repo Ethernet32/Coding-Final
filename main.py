@@ -1,6 +1,6 @@
 import pygame
 from math import atan2, degrees
-from player import *
+from player import Player
 
 player = Player()
 player.resize_image()
@@ -13,3 +13,4 @@ while True:
 
     # wn.blit(tank, Player)
     pygame.display.update()
+
