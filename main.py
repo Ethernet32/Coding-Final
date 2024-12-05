@@ -1,9 +1,12 @@
 import pygame
 from math import atan2, degrees
-from player import Player
+from game import *
+wn = pygame.display.set_mode((850, 750))
 
 player = Player()
 player.resize_image()
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
