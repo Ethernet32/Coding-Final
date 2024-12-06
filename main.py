@@ -1,19 +1,23 @@
 import pygame
-from math import atan2, degrees
 from game import *
-wn = pygame.display.set_mode((850, 750))
+import sys
+screen = pygame.display.set_mode((850, 750))
 
-player = Player()
-player.resize_image()
+game = Game()
+game.resize_images()
+clock = pygame.time.Clock() 
 
 
+game.show_floor(screen)
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
         elif event.type == pygame.MOUSEMOTION:
-            player.point_at(*pygame.mouse.get_pos())
+            game.point_at(*pygame.mouse.get_pos())
+
 
     # wn.blit(tank, Player)
     pygame.display.update()
-
+    clock.tick(120)
