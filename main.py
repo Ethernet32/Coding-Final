@@ -1,23 +1,34 @@
 import pygame
-from game import *
 import sys
+from game import *
+
 screen = pygame.display.set_mode((850, 750))
 
 game = Game()
 game.resize_images()
-clock = pygame.time.Clock() 
+clock = pygame.time.Clock()
+game.resize_images()
 
-
-game.show_floor(screen)
 while True:
-
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-        elif event.type == pygame.MOUSEMOTION:
-            game.point_at(*pygame.mouse.get_pos())
+            sys.exit()
+    pressed = pygame.key.get_pressed()
+    if pressed[pygame.K_d]:
+        game.move_right()
+    if pressed[pygame.K_a]:
+        game.move_left()
+    if pressed[pygame.K_w]:
+        game.move_up()
+    if pressed[pygame.K_s]:
+        game.move_down()
 
+    game.show_floor(screen)
+    if pygame.mouse.get_focused():
+        game.point_at(*pygame.mouse.get_pos())
+    game.show_player(screen)
 
-    # wn.blit(tank, Player)
     pygame.display.update()
     clock.tick(120)
