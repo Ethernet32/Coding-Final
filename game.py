@@ -37,28 +37,31 @@ class Game(pygame.sprite.Sprite):
     def show_player(self, screen):
         screen.blit(self.rotated_image, self.new_rect.topleft)
 
-    def add_bullet(self,screen):
-        bullet = self.bullet.get_rect(midbottom = (0,70))
+    def add_bullet(self):
+        bullet = self.bullet.get_rect(midbottom = (0,0))
         self.bullet_list.append(bullet)
+        print("add_bullet method")
 
     def show_bullets(self, screen):
         for bullet in self.bullet_list:
-            screen.blit(self.bullet,bullet)
+            screen.blit(self.bullet, bullet)
+            print("This is a bullet.")
+        print(self.bullet_list)
 
     def move_right(self):
-        self.floor_x -= 1.5
-        if self.floor_x <= -850:
-            self.floor_x += 850
+        self.floor_x -= 2
+        if self.floor_x <= -750:
+            self.floor_x += 750
     def move_left(self):
-        self.floor_x += 1.5
-        if self.floor_x >= 850:
-            self.floor_x -= 850
+        self.floor_x += 2
+        if self.floor_x >= 750:
+            self.floor_x -= 750
     def move_up(self):
-        self.floor_y += 1.5
-        if self.floor_y >= 850:
-            self.floor_y -= 850
+        self.floor_y += 2
+        if self.floor_y >= 750:
+            self.floor_y -= 750
     def move_down(self):
         
-        self.floor_y -= 1.5
-        if self.floor_y <= -850:
-            self.floor_y += 850
+        self.floor_y -= 2
+        if self.floor_y <= -750:
+            self.floor_y += 750
