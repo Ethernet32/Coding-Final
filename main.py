@@ -17,10 +17,12 @@ while True:
             sys.exit() 
         if event.type == pygame. MOUSEBUTTONDOWN:
             game.add_bullet()
-            print("Bullet Added")
+            game.rotate_bullet(*pygame.mouse.get_pos())
         if event.type == SPAWNENEMY:
             game.add_enemy()
-
+        if pygame.mouse.get_focused():
+                game.point_at(*pygame.mouse.get_pos())
+            
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_d]:
         game.move_right()
@@ -33,12 +35,13 @@ while True:
     
     
     game.show_floor(screen)
-    game.show_bullets(screen)
+    if len(game.bullet_list) >= 1:
+        game.show_bullets(screen)
+        game.move_bullet()
     game.show_enemy(screen)
-
-    if pygame.mouse.get_focused():
-        game.point_at(*pygame.mouse.get_pos())
     game.show_player(screen)
+
+    
 
     pygame.display.update()
     clock.tick(120)
