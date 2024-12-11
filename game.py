@@ -50,10 +50,7 @@ class Game(pygame.sprite.Sprite):
         for bullet in self.bullet_list:
             screen.blit(self.bullet, bullet)
             print("This is a bullet.")
-        print(self.bullet_list)
-            screen.blit(self.bullet, bullet)
-            print("This is a bullet.")
-        print(self.bullet_list)
+            print(self.bullet_list)
 
     def move_right(self):
         self.floor_x -= 2
