@@ -14,6 +14,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit() 
+            sys.exit() 
         if event.type == pygame. MOUSEBUTTONDOWN:
             game.add_bullet()
             print("Bullet Added")
