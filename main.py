@@ -2,6 +2,7 @@
 import pygame
 import sys
 from game import *
+from fractions import Fraction
 
 screen = pygame.display.set_mode((850, 750))
 game = Game()
@@ -17,7 +18,7 @@ while True:
             sys.exit() 
         if event.type == pygame. MOUSEBUTTONDOWN:
             game.add_bullet()
-            game.rotate_bullet(*pygame.mouse.get_pos())
+            #game.rotate_bullet(*pygame.mouse.get_pos())
         if event.type == SPAWNENEMY:
             game.add_enemy()
         if pygame.mouse.get_focused():
@@ -35,9 +36,8 @@ while True:
     
     
     game.show_floor(screen)
-    if len(game.bullet_list) >= 1:
-        game.show_bullets(screen)
-        game.move_bullet()
+    game.show_bullets(screen)
+    game.find_slope(*pygame.mouse.get_pos())
     game.show_enemy(screen)
     game.show_player(screen)
 
