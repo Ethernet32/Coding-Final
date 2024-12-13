@@ -87,12 +87,12 @@ class Game(pygame.sprite.Sprite):
             distance = sqrt(dx ** 2 + dy ** 2)
             eslope_x = dx / distance
             eslope_y = dy / distance
-            enemy.centerx += eslope_x * 1.7
-            enemy.centery += eslope_y * 1.7
+            enemy.centerx += eslope_x * 2.5
+            enemy.centery += eslope_y * 2.5
 
     def move_right(self,speed):
         for i in range(speed):
-            self.floor_x -= 1
+            self.floor_x -= .5
             if self.floor_x <= -750:
                 self.floor_x += 750
             for enemy in self.enemy_list:
@@ -100,7 +100,7 @@ class Game(pygame.sprite.Sprite):
 
     def move_left(self,speed):
         for i in range(speed):
-            self.floor_x += 1
+            self.floor_x += .5
             if self.floor_x >= 750:
                 self.floor_x -= 750
             for enemy in self.enemy_list:
@@ -108,7 +108,7 @@ class Game(pygame.sprite.Sprite):
 
     def move_up(self,speed):
         for i in range(speed):
-            self.floor_y += 1
+            self.floor_y += .5
             if self.floor_y >= 750:
                 self.floor_y -= 750
             for enemy in self.enemy_list:
@@ -116,7 +116,7 @@ class Game(pygame.sprite.Sprite):
 
     def move_down(self,speed):
         for i in range(speed):
-            self.floor_y -= 1
+            self.floor_y -= .5
             if self.floor_y <= -750:
                 self.floor_y += 750
             for enemy in self.enemy_list:
