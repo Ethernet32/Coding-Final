@@ -1,7 +1,8 @@
-
 import pygame
+import random
 from math import *
-from fractions import *
+import sys
+
 screen = pygame.display.set_mode((850, 750))
 
 class Game(pygame.sprite.Sprite):
@@ -12,103 +13,111 @@ class Game(pygame.sprite.Sprite):
         self.player = pygame.image.load('img/player.png')
         self.playerrect = self.player.get_rect()
         self.bullet = pygame.image.load('img/bullet.png')
-        self.bullet_list = []
-        #self.rbullet = []
         self.bulletrect = self.bullet.get_rect()
+        self.bullet_list = []
+        self.enemy = pygame.image.load('img\zom1.png')
+        self.enemyrect = self.enemy.get_rect()
+        self.enemy_list = []
         self.floor_x = 0
         self.floor_y = 0
         self.health = 100
         self.active = True
         self.rotated_image = self.player
         self.new_rect = self.playerrect
-        self.playerrect.center = (850/2, 750/2)
+        self.rotated_enemy = self.enemy
+        self.new_enemy_rect = self.enemyrect
+        self.playerrect.center = (850/2,750/2)
         self.groundrect.center = ((2550/2, 2250/2))
-        self.enemy = pygame.image.load('img/zom1.png')
-        self.enemy_list = []
-        self.fired = False
-        #self.ri = pygame.image.load('img/bullet.png')
-        #self.new_r = self.bullet.get_rect()
+        self.pointed = False
+        self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
+
     def resize_images(self):
         self.player = pygame.transform.scale(self.player, (64, 60))
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
         self.bullet = pygame.transform.scale(self.bullet, (20, 20))
+        self.enemy = pygame.transform.scale(self.enemy, (90, 70))
 
     def show_floor(self, screen):
-        screen.blit(self.ground, (self.floor_x-850, self.floor_y-850))
+        screen.blit(self.ground, (self.floor_x - 850, self.floor_y - 850))
 
     def point_at(self, x, y):
         angle = atan2(y - self.playerrect.centery, x - self.playerrect.centerx)
-        self.rotated_image = pygame.transform.rotate(self.player, degrees(-1*(angle)))
+        self.rotated_image = pygame.transform.rotate(self.player, degrees(-1 * (angle)))
         self.new_rect = self.rotated_image.get_rect(center=self.playerrect.center)
 
     def show_player(self, screen):
         screen.blit(self.rotated_image, self.new_rect.topleft)
 
-    def add_bullet(self):
-        bullet = self.bullet.get_rect(center = self.playerrect.center)
-        self.bullet_list.append(bullet)
-        #self.rbullet.append(bullet)
+    def add_bullet(self, x, y):
+        dx = x - self.playerrect.centerx
+        dy = y - self.playerrect.centery
+        distance = sqrt(dx ** 2 + dy ** 2)
+        slope_x = dx / distance
+        slope_y = dy / distance
+        bullet = self.bullet.get_rect(center=self.playerrect.center)
+        self.bullet_list.append((bullet, slope_x, slope_y))
 
     def show_bullets(self, screen):
-        if len(self.bullet_list) >= 1:
-            for bullet in self.bullet_list:
-                screen.blit(self.bullet, bullet)
+        for bullet, _, _ in self.bullet_list:
+            screen.blit(self.bullet, bullet)
 
-    def move_bullet(self, x, y):
-        for bullet in self.bullet_list:
-            bullet.centerx -= bullet.centerx*slope
-            bullet.centery -= bullet.centerx*slope
-            self.fired = True
+    def move_bullet(self):
+        for index, (bullet, slope_x, slope_y) in enumerate(self.bullet_list):
+            bullet.centerx += slope_x * 5
+            bullet.centery += slope_y * 5
+            if not screen.get_rect().colliderect(bullet):
+                self.bullet_list.pop(index)
 
-    def find_slope(self, x, y):
-        slope = (y+375)/(x + 425)
-        print(slope)
-        if self.fired == False:
-            for bullet in self.bullet_list:
-                bullet.xv -= bullet.xv*slope
-                bullet.yv -= bullet.yv*slope
-                self.fired = True
+    def add_enemy(self, x, y):
+        enemy = self.enemy.get_rect(center=random.choice(self.enemy_spawn))
+        self.enemy_list.append(enemy)
 
-    def move_right(self):
-        self.floor_x -= 2
-        if self.floor_x <= -750:
-            self.floor_x += 750
-        self.floor_x -= 2
-        if self.floor_x <= -750:
-            self.floor_x += 750
-    def move_left(self):
-        self.floor_x += 2
-        if self.floor_x >= 750:
-            self.floor_x -= 750
-        self.floor_x += 2
-        if self.floor_x >= 750:
-            self.floor_x -= 750
-    def move_up(self):
-        self.floor_y += 2
-        if self.floor_y >= 750:
-            self.floor_y -= 750
-        self.floor_y += 2
-        if self.floor_y >= 750:
-            self.floor_y -= 750
-    def move_down(self):
-        self.floor_y -= 2
-        if self.floor_y <= -750:
-            self.floor_y += 750
-    def add_enemy(self):
-        enemy = self.enemy.get_rect(midbottom = (30,30))
-        self.bullet_list.append(enemy)
-        print("add_enemy method")
-
-    def show_enemy(self, screen):
+    def show_enemy(self, x, y):
         for enemy in self.enemy_list:
-            screen.blit(self.enemy, enemy)
+            angle = atan2(y - enemy.centery, x - enemy.centerx)
+            rotated_enemy = pygame.transform.rotate(self.enemy, degrees(-1 * angle))
+            enemy_rect = rotated_enemy.get_rect(center=enemy.center)
+            enemy.center = enemy_rect.center
+            screen.blit(rotated_enemy, enemy_rect.topleft)
 
-"""def rotate_bullet(self, x, y):
-        print("rotated")
-        for bullet in self.rbullet:
-            angle = atan2(y - bullet.centery, x - bullet.centerx)
-            self.ri = pygame.transform.rotate(self.bullet, degrees(-1*(angle)))
-            self.new_r = self.rotated_image.get_rect(center=bullet.center)
-            print(f"bullet list {self.bullet_list}")
-            print(f"rbullet list {self.rbullet}")
-            self.rbullet.remove(bullet)"""
+    def move_enemy(self):
+        for enemy in self.enemy_list:
+            dx = self.playerrect.centerx - enemy.centerx
+            dy = self.playerrect.centery - enemy.centery
+            distance = sqrt(dx ** 2 + dy ** 2)
+            eslope_x = dx / distance
+            eslope_y = dy / distance
+            enemy.centerx += eslope_x * 1.7
+            enemy.centery += eslope_y * 1.7
+
+    def move_right(self,speed):
+        for i in range(speed):
+            self.floor_x -= 1
+            if self.floor_x <= -750:
+                self.floor_x += 750
+            for enemy in self.enemy_list:
+                enemy.centerx -=1
+
+    def move_left(self,speed):
+        for i in range(speed):
+            self.floor_x += 1
+            if self.floor_x >= 750:
+                self.floor_x -= 750
+            for enemy in self.enemy_list:
+                enemy.centerx +=1
+
+    def move_up(self,speed):
+        for i in range(speed):
+            self.floor_y += 1
+            if self.floor_y >= 750:
+                self.floor_y -= 750
+            for enemy in self.enemy_list:
+                enemy.centery +=1
+
+    def move_down(self,speed):
+        for i in range(speed):
+            self.floor_y -= 1
+            if self.floor_y <= -750:
+                self.floor_y += 750
+            for enemy in self.enemy_list:
+                enemy.centery -=1
