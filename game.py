@@ -1,3 +1,4 @@
+
 import pygame
 import random
 from math import *
@@ -10,17 +11,23 @@ class Game(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.ground = pygame.image.load('img/ground.png')
         self.groundrect = self.ground.get_rect()
-        self.player = pygame.image.load('img/player.png')
+        self.player_img = pygame.image.load('img/player.png')
+        self.player = pygame.transform.scale(self.player_img, (64, 60))
         self.playerrect = self.player.get_rect()
-        self.bullet = pygame.image.load('img/bullet.png')
+        self.bullet_img = pygame.image.load('img/bullet.png')
+        self.bullet = pygame.transform.scale(self.bullet_img, (20, 20))
         self.bulletrect = self.bullet.get_rect()
         self.bullet_list = []
-        self.enemy = pygame.image.load('img\zom1.png')
+        self.enemy_img = pygame.image.load('img\zom1.png')
+        self.enemy = pygame.transform.scale(self.enemy_img, (90, 70))
         self.enemyrect = self.enemy.get_rect()
         self.enemy_list = []
+        self.enemy_health = 1
+        self.enemy_damage = 10
         self.floor_x = 0
         self.floor_y = 0
         self.health = 100
+        self.player_damage = 10
         self.active = True
         self.rotated_image = self.player
         self.new_rect = self.playerrect
@@ -32,10 +39,7 @@ class Game(pygame.sprite.Sprite):
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
 
     def resize_images(self):
-        self.player = pygame.transform.scale(self.player, (64, 60))
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
-        self.bullet = pygame.transform.scale(self.bullet, (20, 20))
-        self.enemy = pygame.transform.scale(self.enemy, (90, 70))
 
     def show_floor(self, screen):
         screen.blit(self.ground, (self.floor_x - 850, self.floor_y - 850))
@@ -90,13 +94,30 @@ class Game(pygame.sprite.Sprite):
             enemy.centerx += eslope_x * 2.5
             enemy.centery += eslope_y * 2.5
 
+    def p_e_collision(self):
+        if self.health <= 0:
+            self.active = False
+        for enemy in self.enemy_list:
+            if self.playerrect.colliderect(enemy):
+                self.health -= self.enemy_damage
+                self.enemy_list.remove(enemy)
+    
+    def b_e_collision(self):
+        if self.enemy_health <= 0:
+            self.enemy_list.remove(enemy)
+        for enemy in self.enemy_list:
+            if enemy.colliderect(self.bulletrect):
+                self.enemy_health -= self.player_damage
+                
+
+
     def move_right(self,speed):
         for i in range(speed):
             self.floor_x -= .5
             if self.floor_x <= -750:
                 self.floor_x += 750
             for enemy in self.enemy_list:
-                enemy.centerx -=1
+                enemy.centerx -=.5
 
     def move_left(self,speed):
         for i in range(speed):
@@ -104,7 +125,7 @@ class Game(pygame.sprite.Sprite):
             if self.floor_x >= 750:
                 self.floor_x -= 750
             for enemy in self.enemy_list:
-                enemy.centerx +=1
+                enemy.centerx +=.5
 
     def move_up(self,speed):
         for i in range(speed):
@@ -112,7 +133,7 @@ class Game(pygame.sprite.Sprite):
             if self.floor_y >= 750:
                 self.floor_y -= 750
             for enemy in self.enemy_list:
-                enemy.centery +=1
+                enemy.centery += .5
 
     def move_down(self,speed):
         for i in range(speed):
@@ -120,4 +141,4 @@ class Game(pygame.sprite.Sprite):
             if self.floor_y <= -750:
                 self.floor_y += 750
             for enemy in self.enemy_list:
-                enemy.centery -=1
+                enemy.centery -= .5
