@@ -103,11 +103,11 @@ class Game(pygame.sprite.Sprite):
                 self.enemy_list.remove(enemy)
     
     def b_e_collision(self):
-        if self.enemy_health <= 0:
-            self.enemy_list.remove(enemy)
         for enemy in self.enemy_list:
             if enemy.colliderect(self.bulletrect):
                 self.enemy_health -= self.player_damage
+            if self.enemy_health <= 0:
+                self.enemy_list.remove(enemy)
                 
 
 
