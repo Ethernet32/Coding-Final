@@ -2,7 +2,7 @@ import pygame
 import sys
 from game import *
 from fractions import Fraction
-
+pygame.init()
 screen = pygame.display.set_mode((850, 750))
 game = Game()
 game.resize_images()
@@ -58,6 +58,7 @@ while True:
         game.show_player(screen)
         game.p_e_collision()
         game.b_e_collision()
+        game.show_score("playing", screen, (255,255,255))
 
     pygame.display.update()
     clock.tick(120)
