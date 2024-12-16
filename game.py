@@ -26,6 +26,7 @@ class Game(pygame.sprite.Sprite):
         self.enemy_damage = 10
         self.floor_x = 0
         self.floor_y = 0
+        self.font = pygame.font.SysFont('Arial', 48)
         self.health = 100
         self.player_damage = 10
         self.active = True
@@ -37,7 +38,7 @@ class Game(pygame.sprite.Sprite):
         self.groundrect.center = ((2550/2, 2250/2))
         self.pointed = False
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
-
+        self.score = 0
     def resize_images(self):
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
 
@@ -108,8 +109,22 @@ class Game(pygame.sprite.Sprite):
                 self.enemy_health -= self.player_damage
             if self.enemy_health <= 0:
                 self.enemy_list.remove(enemy)
-                
+                self.score += 1
 
+    def show_score(self, game_state, screen, color):
+        score_surface = self.font.render(str(self.score), True, color)
+        score_rect = score_surface.get_rect(center = (202, 75))
+        screen.blit(score_surface, score_rect)
+        if game_state == "Game_Over":
+            restart_text1 = self.font.render("Press Space Bar", True, color)
+            restart_rect1 = restart_text1.get_rect(center=(200, 280))
+            screen.blit(restart_text1, restart_rect1)
+            restart_text2 = self.font.render("To Play Again", True, color)
+            restart_rect2 = restart_text2.get_rect(center=(200, 340))
+            screen.blit(restart_text2, restart_rect2)
+            high_score_surface = self.font.render("High Score: {:d}".format(int(self.high_score)), True, color)
+            high_score_rect = high_score_surface.get_rect(center = (200, 610))
+            screen.blit(high_score_surface, high_score_rect)
 
     def move_right(self,speed):
         for i in range(speed):
