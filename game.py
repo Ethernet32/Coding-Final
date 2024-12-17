@@ -39,8 +39,11 @@ class Game(pygame.sprite.Sprite):
         self.pointed = False
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
         self.score = 0
+        self.hurt = pygame.image.load('img/hurt.png')
+
     def resize_images(self):
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
+        self.hurt = pygame.transform.scale(self.hurt, (2550, 2250))
 
     def show_floor(self, screen):
         screen.blit(self.ground, (self.floor_x - 850, self.floor_y - 850))
@@ -95,13 +98,17 @@ class Game(pygame.sprite.Sprite):
             enemy.centerx += eslope_x * 2.5
             enemy.centery += eslope_y * 2.5
 
-    def p_e_collision(self):
+    def p_e_collision(self,screen):
         if self.health <= 0:
             self.active = False
         for enemy in self.enemy_list:
             if self.playerrect.colliderect(enemy):
                 self.health -= self.enemy_damage
                 self.enemy_list.remove(enemy)
+                self.hurts(screen)
+    def hurts(self,screen):
+        screen.blit(self.hurt, (self.floor_x - 850, self.floor_y - 850))
+        pygame.time.wait(10)
     
     def b_e_collision(self):
         for enemy in self.enemy_list:

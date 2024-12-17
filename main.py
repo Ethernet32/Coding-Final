@@ -51,12 +51,13 @@ while True:
     
     if game.active == True:
         game.show_floor(screen)
+        game.p_e_collision(screen)
         game.show_bullets(screen)
         game.move_bullet()
         game.move_enemy()
         game.show_enemy(850/2, 750/2)
         game.show_player(screen)
-        game.p_e_collision()
+        
         game.b_e_collision()
         game.show_score("playing", screen, (255,255,255))
 
