@@ -4,6 +4,7 @@ import random
 from math import *
 import sys
 
+pygame.init()
 screen = pygame.display.set_mode((850, 750))
 
 class Game(pygame.sprite.Sprite):
@@ -28,7 +29,7 @@ class Game(pygame.sprite.Sprite):
         self.floor_y = 0
         self.font = pygame.font.SysFont('Arial', 48)
         self.health = 100
-        self.player_damage = 10
+        self.player_damage = 1
         self.active = True
         self.rotated_image = self.player
         self.new_rect = self.playerrect
@@ -112,11 +113,9 @@ class Game(pygame.sprite.Sprite):
     
     def b_e_collision(self):
         for enemy in self.enemy_list:
-            if enemy.colliderect(self.bulletrect):
-                self.enemy_health -= self.player_damage
-            if self.enemy_health <= 0:
-                self.enemy_list.remove(enemy)
-                self.score += 1
+            collide_list = enemy.collidelistall(self.bullet_list)
+            if collide_list:
+                print("hit")
 
     def show_score(self, game_state, screen, color):
         score_surface = self.font.render(str(self.score), True, color)

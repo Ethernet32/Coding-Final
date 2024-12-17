@@ -26,30 +26,30 @@ while True:
         if event.type == SPAWNENEMY:
             game.add_enemy(850/2, 750/2)
         
-
-    pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_d]:
-        if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_a]:
-            game.move_right(3)
-        else:
-            game.move_right(4)
-    if pressed[pygame.K_a]:
-        if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_d]:
-            game.move_left(3)
-        else:
-            game.move_left(4)
-    if pressed[pygame.K_w]:
-        if pressed[pygame.K_d] or pressed[pygame.K_s] or pressed[pygame.K_a]:
-            game.move_up(3)
-        else:
-            game.move_up(4)
-    if pressed[pygame.K_s]:
-        if pressed[pygame.K_d] or pressed[pygame.K_w] or pressed[pygame.K_a]:
-            game.move_down(3)
-        else:
-            game.move_down(4)
-    
     if game.active == True:
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_d]:
+            if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_a]:
+                game.move_right(3)
+            else:
+                game.move_right(4)
+        if pressed[pygame.K_a]:
+            if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_d]:
+                game.move_left(3)
+            else:
+                game.move_left(4)
+        if pressed[pygame.K_w]:
+            if pressed[pygame.K_d] or pressed[pygame.K_s] or pressed[pygame.K_a]:
+                game.move_up(3)
+            else:
+                game.move_up(4)
+        if pressed[pygame.K_s]:
+            if pressed[pygame.K_d] or pressed[pygame.K_w] or pressed[pygame.K_a]:
+                game.move_down(3)
+            else:
+                game.move_down(4)
+    
+
         game.show_floor(screen)
         game.p_e_collision(screen)
         game.show_bullets(screen)
