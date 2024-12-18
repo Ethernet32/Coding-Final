@@ -52,23 +52,23 @@ while True:
                 game.espeed += .2
             
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_d]:
-        if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_a]:
+    if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
+        if pressed[pygame.K_w] or pressed[pygame.K_UP] or pressed[pygame.K_s] or pressed[pygame.K_DOWN] or pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
             game.move_right(3)
         else:
             game.move_right(4)
-    if pressed[pygame.K_a]:
-        if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_d]:
+    if pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
+        if pressed[pygame.K_w] or pressed[pygame.K_UP] or pressed[pygame.K_s] or pressed[pygame.K_DOWN] or pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
             game.move_left(3)
         else:
             game.move_left(4)
-    if pressed[pygame.K_w]:
-        if pressed[pygame.K_d] or pressed[pygame.K_s] or pressed[pygame.K_a]:
+    if pressed[pygame.K_w] or pressed[pygame.K_UP]:
+        if pressed[pygame.K_d] or pressed[pygame.K_RIGHT] or pressed[pygame.K_s] or pressed[pygame.K_DOWN] or pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
             game.move_up(3)
         else:
             game.move_up(4)
-    if pressed[pygame.K_s]:
-        if pressed[pygame.K_d] or pressed[pygame.K_w] or pressed[pygame.K_a]:
+    if pressed[pygame.K_s] or pressed[pygame.K_DOWN]:
+        if pressed[pygame.K_d] or pressed[pygame.K_RIGHT] or pressed[pygame.K_w] or pressed[pygame.K_UP] or pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
             game.move_down(3)
         else:
             game.move_down(4)
