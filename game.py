@@ -22,24 +22,32 @@ class Game(pygame.sprite.Sprite):
         self.enemy = pygame.transform.scale(self.enemy_img, (90, 70))
         self.enemyrect = self.enemy.get_rect()
         self.enemy_list = []
-        self.enemy_health = 1
-        self.enemy_damage = 10
         self.floor_x = 0
         self.floor_y = 0
         self.font = pygame.font.SysFont('Arial', 48)
         self.health = 100
         self.player_damage = 1
-        self.active = True
+        self.active = False  # Game is not active initially
         self.rotated_image = self.player
         self.new_rect = self.playerrect
         self.rotated_enemy = self.enemy
         self.new_enemy_rect = self.enemyrect
-        self.playerrect.center = (850/2,750/2)
+        self.playerrect.center = (850/2, 750/2)
         self.groundrect.center = ((2550/2, 2250/2))
         self.pointed = False
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
         self.score = 0
         self.high_score = 0
+
+    def start(self, screen):
+        screen.fill((0, 0, 0))
+        start_text1 = self.font.render("Zombie Survival", True, (255, 255, 255))
+        start_rect1 = start_text1.get_rect(center=(850/2, 280))
+        screen.blit(start_text1, start_rect1)
+        start_text2 = self.font.render("Press Space Bar to play", True, (255, 255, 255))
+        start_rect2 = start_text2.get_rect(center=(850/2, 480))
+        screen.blit(start_text2, start_rect2)
+        pygame.display.update()
 
     def resize_images(self):
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
@@ -97,19 +105,20 @@ class Game(pygame.sprite.Sprite):
             enemy.centerx += eslope_x * 2.5
             enemy.centery += eslope_y * 2.5
 
-    def p_e_collision(self,screen):
+    def p_e_collision(self, screen):
         if self.health <= 0:
             self.active = False
         for enemy in self.enemy_list:
             if self.playerrect.colliderect(enemy):
-                self.health -= self.enemy_damage
+                self.health -= random.randint(5, 15)
                 self.enemy_list.remove(enemy)
                 self.hurts(screen)
-    def hurts(self,screen):
+
+    def hurts(self, screen):
         screen.fill((255, 0, 0))
         pygame.display.flip()
         pygame.time.wait(100)
-    
+
     def b_e_collision(self):
         for bullet in self.bullet_list:
             for enemy in self.enemy_list:
@@ -120,36 +129,42 @@ class Game(pygame.sprite.Sprite):
 
     def show_score(self, game_state, screen, color):
         score_surface = self.font.render(str(self.score), True, color)
-        score_rect = score_surface.get_rect(center = ((850/2,75)))
+        score_rect = score_surface.get_rect(center=(850/2, 75))
         screen.blit(score_surface, score_rect)
-
 
     def update_high_score(self):
         if self.score > self.high_score:
             self.high_score = int(self.score)
+
+    def display_health(self,screen):
+        health = self.font.render(f"{self.health}/100", True, (255, 255, 255))
+        healthrect = health.get_rect(center=(100, 700))
+        screen.blit(health, healthrect)
+        pygame.display.update()
+
 
     def restart(self):
         self.active = True
         self.bullet_list = []
         self.enemy_list = []
 
-    def move_right(self,speed):
+    def move_right(self, speed):
         for i in range(speed):
             self.floor_x -= .5
             if self.floor_x <= -750:
                 self.floor_x += 750
             for enemy in self.enemy_list:
-                enemy.centerx -=.5
+                enemy.centerx -= .5
 
-    def move_left(self,speed):
+    def move_left(self, speed):
         for i in range(speed):
             self.floor_x += .5
             if self.floor_x >= 750:
                 self.floor_x -= 750
             for enemy in self.enemy_list:
-                enemy.centerx +=.5
+                enemy.centerx += .5
 
-    def move_up(self,speed):
+    def move_up(self, speed):
         for i in range(speed):
             self.floor_y += .5
             if self.floor_y >= 750:
@@ -157,7 +172,7 @@ class Game(pygame.sprite.Sprite):
             for enemy in self.enemy_list:
                 enemy.centery += .5
 
-    def move_down(self,speed):
+    def move_down(self, speed):
         for i in range(speed):
             self.floor_y -= .5
             if self.floor_y <= -750:
