@@ -1,4 +1,3 @@
-
 import pygame
 import sys
 from game import *
@@ -11,11 +10,17 @@ clock = pygame.time.Clock()
 color = (255,255,255)
 SPAWNENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(SPAWNENEMY, 1000)
+start_screen = True
+game.start(screen)
 
-
-start_text1 = game.font.render("zombiw Survival suv", True, color)
-start_rect1 = start_text1.get_rect(center=(850/2, 280))
-screen.blit(start_text1, start_rect1)
+while start_screen:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_SPACE]:
+            start_screen = False
 
 
 while True:
@@ -70,6 +75,7 @@ while True:
         game.show_player(screen)
         game.b_e_collision()
         game.show_score("playing", screen, (255,255,255))
+        game.display_health(screen)
     else:
         screen.fill((0, 0, 0))
         game.update_high_score()
