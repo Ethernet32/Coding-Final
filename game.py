@@ -1,4 +1,3 @@
-
 import pygame
 import random
 from math import *
@@ -40,11 +39,10 @@ class Game(pygame.sprite.Sprite):
         self.pointed = False
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
         self.score = 0
-        self.hurt = pygame.image.load('img/hurt.png')
+        self.high_score = 0
 
     def resize_images(self):
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
-        self.hurt = pygame.transform.scale(self.hurt, (2550, 2250))
 
     def show_floor(self, screen):
         screen.blit(self.ground, (self.floor_x - 850, self.floor_y - 850))
@@ -108,18 +106,21 @@ class Game(pygame.sprite.Sprite):
                 self.enemy_list.remove(enemy)
                 self.hurts(screen)
     def hurts(self,screen):
-        screen.blit(self.hurt, (self.floor_x - 850, self.floor_y - 850))
-        pygame.time.wait(10)
+        screen.fill((255, 0, 0))
+        pygame.display.flip()
+        pygame.time.wait(100)
     
     def b_e_collision(self):
-        for enemy in self.enemy_list:
-            collide_list = enemy.collidelistall(self.bullet_list)
-            if collide_list:
-                print("hit")
+        for bullet in self.bullet_list:
+            for enemy in self.enemy_list:
+                if bullet[0].colliderect(enemy):
+                    self.enemy_list.remove(enemy)
+                    self.bullet_list.remove(bullet)
+                    self.score += 1
 
     def show_score(self, game_state, screen, color):
         score_surface = self.font.render(str(self.score), True, color)
-        score_rect = score_surface.get_rect(center = (202, 75))
+        score_rect = score_surface.get_rect(center = ((850/2,75)))
         screen.blit(score_surface, score_rect)
         if game_state == "Game_Over":
             restart_text1 = self.font.render("Press Space Bar", True, color)
@@ -131,6 +132,19 @@ class Game(pygame.sprite.Sprite):
             high_score_surface = self.font.render("High Score: {:d}".format(int(self.high_score)), True, color)
             high_score_rect = high_score_surface.get_rect(center = (200, 610))
             screen.blit(high_score_surface, high_score_rect)
+
+    def game_over(self, screen, color):
+        self.update_high_score()
+        self.show_score("game over", screen, color)
+
+    def update_high_score(self):
+        if self.score > self.high_score:
+            self.high_score = int(self.score)
+
+    def restart(self):
+        self.active = True
+        self.bullet_list = []
+        self.enemy_list = []
 
     def move_right(self,speed):
         for i in range(speed):
