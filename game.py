@@ -18,7 +18,7 @@ class Game(pygame.sprite.Sprite):
         self.bullet = pygame.transform.scale(self.bullet_img, (20, 20))
         self.bulletrect = self.bullet.get_rect()
         self.bullet_list = []
-        self.enemy_img = pygame.image.load('img/zom1.png')
+        self.enemy_img = pygame.image.load('img\zom1.png')
         self.enemy = pygame.transform.scale(self.enemy_img, (90, 70))
         self.enemyrect = self.enemy.get_rect()
         self.enemy_list = []
@@ -40,7 +40,6 @@ class Game(pygame.sprite.Sprite):
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
         self.score = 0
         self.high_score = 0
-        self.game_state = "playing"
 
     def resize_images(self):
         self.ground = pygame.transform.scale(self.ground, (2550, 2250))
@@ -119,30 +118,11 @@ class Game(pygame.sprite.Sprite):
                     self.bullet_list.remove(bullet)
                     self.score += 1
 
-    def show_score(self, screen, color):
+    def show_score(self, game_state, screen, color):
         score_surface = self.font.render(str(self.score), True, color)
         score_rect = score_surface.get_rect(center = ((850/2,75)))
-        health_surface = self.font.render("Health: " + str(self.health), True, color)
-        health_rect = health_surface.get_rect(center = ((225/2,75)))
-        screen.blit(health_surface, health_rect)
         screen.blit(score_surface, score_rect)
-        print(self.game_state)
-        if self.game_state == "Game_Over":
-            print("THIS IS WORKING")
-            restart_text1 = self.font.render("Press Space Bar", True, color)
-            restart_rect1 = restart_text1.get_rect(center=(200, 280))
-            screen.blit(restart_text1, restart_rect1)
-            restart_text2 = self.font.render("To Play Again", True, color)
-            restart_rect2 = restart_text2.get_rect(center=(200, 340))
-            screen.blit(restart_text2, restart_rect2)
-            high_score_surface = self.font.render("High Score: {:d}".format(int(self.high_score)), True, color)
-            high_score_rect = high_score_surface.get_rect(center = (200, 610))
-            screen.blit(high_score_surface, high_score_rect)
 
-    def game_over(self, screen, color):
-        self.update_high_score()
-        self.game_state == "Game_Over"
-        self.show_score(screen, color)
 
     def update_high_score(self):
         if self.score > self.high_score:
