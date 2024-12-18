@@ -4,14 +4,17 @@ from game import *
 from fractions import Fraction
 pygame.init()
 screen = pygame.display.set_mode((850, 750))
+speed = 0
 game = Game()
 game.resize_images()
 clock = pygame.time.Clock()
 color = (255,255,255)
 SPAWNENEMY = pygame.USEREVENT + 1
 SPEEDUP = pygame.USEREVENT + 4
-pygame.time.set_timer(SPEEDUP, 1000)
-pygame.time.set_timer(SPAWNENEMY, random.randint(800, 1500))
+SPAWNUP = pygame.USEREVENT + 2
+pygame.time.set_timer(SPAWNUP, 3000)
+pygame.time.set_timer(SPEEDUP, 3000)
+pygame.time.set_timer(SPAWNENEMY, random.randint(800-speed, 1500-speed))
 start_screen = True
 game.start(screen)
 level = 1
@@ -20,7 +23,6 @@ level = 1
 while start_screen:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
             sys.exit()
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_SPACE]:
@@ -40,6 +42,9 @@ while True:
 
         if event.type == SPAWNENEMY:
             game.add_enemy(850/2, 750/2)
+        
+        if event.type == SPAWNUP:
+            speed += 1
 
         if game.score == 10*level:
             if level < 3:
@@ -48,8 +53,8 @@ while True:
             game.enemy_damage = random.randint(5*level, 16)
         
         if event.type == SPEEDUP:
-            if game.espeed < 4:
-                game.espeed += .2
+            if game.espeed < 10:
+                game.espeed += .1
             
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
@@ -80,6 +85,8 @@ while True:
             game.enemy_list = []
             game.health = 100
             game.score = 0
+            game.espeed = 2.5
+
             
 
     if game.active == True:
