@@ -9,11 +9,9 @@ game.resize_images()
 clock = pygame.time.Clock()
 color = (255,255,255)
 SPAWNENEMY = pygame.USEREVENT + 1
-UPGRADEENEMY = pygame.USEREVENT + 2
 SPEEDUP = pygame.USEREVENT + 4
 pygame.time.set_timer(SPEEDUP, 1000)
 pygame.time.set_timer(SPAWNENEMY, random.randint(800, 1500))
-pygame.time.set_timer(UPGRADEENEMY, 15000)
 start_screen = True
 game.start(screen)
 level = 1
@@ -43,7 +41,7 @@ while True:
         if event.type == SPAWNENEMY:
             game.add_enemy(850/2, 750/2)
 
-        if event.type == UPGRADEENEMY:
+        if game.score == 10*level:
             if level < 3:
                 level += 1
             game.enemy = pygame.image.load(f'img/zom{level}.png')
@@ -76,10 +74,13 @@ while True:
             game.move_down(4)
     if pressed[pygame.K_SPACE] and game.active == False:
             game.active = True
+            game.enemy = pygame.image.load('img/zom1.png')
+            level = 1
             game.bullet_list = []
             game.enemy_list = []
             game.health = 100
             game.score = 0
+            
 
     if game.active == True:
         game.show_floor(screen)
