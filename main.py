@@ -59,7 +59,7 @@ while True:
         game.show_enemy(850/2, 750/2)
         game.show_player(screen)
         game.b_e_collision()
-        game.show_score("playing", screen, (255,255,255))
+        game.show_score(screen, (255,255,255))
     else:
         game.game_over(screen, (255,255,255))
 
