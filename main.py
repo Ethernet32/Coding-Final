@@ -9,9 +9,15 @@ game.resize_images()
 clock = pygame.time.Clock()
 color = (255,255,255)
 SPAWNENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(SPAWNENEMY, 1000)
+UPGRADEENEMY = pygame.USEREVENT + 2
+SPEEDUP = pygame.USEREVENT + 4
+pygame.time.set_timer(SPEEDUP, 1000)
+pygame.time.set_timer(SPAWNENEMY, random.randint(800, 1500))
+pygame.time.set_timer(UPGRADEENEMY, 15000)
 start_screen = True
 game.start(screen)
+level = 1
+
 
 while start_screen:
     for event in pygame.event.get():
@@ -21,7 +27,6 @@ while start_screen:
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_SPACE]:
             start_screen = False
-
 
 while True:
     for event in pygame.event.get():
@@ -37,6 +42,17 @@ while True:
 
         if event.type == SPAWNENEMY:
             game.add_enemy(850/2, 750/2)
+
+        if event.type == UPGRADEENEMY:
+            if level < 3:
+                level += 1
+            game.enemy = pygame.image.load(f'img/zom{level}.png')
+            game.enemy_damage = random.randint(5*level, 16)
+        
+        if event.type == SPEEDUP:
+            if game.espeed < 4:
+                game.espeed += .2
+            
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_d]:
         if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_a]:

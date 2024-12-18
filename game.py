@@ -32,12 +32,14 @@ class Game(pygame.sprite.Sprite):
         self.new_rect = self.playerrect
         self.rotated_enemy = self.enemy
         self.new_enemy_rect = self.enemyrect
+        self.enemy_damage = random.randint(5, 15)
         self.playerrect.center = (850/2, 750/2)
         self.groundrect.center = ((2550/2, 2250/2))
         self.pointed = False
         self.enemy_spawn = [(-100, -100), (-100, 0), (-100, 100), (-100, 200), (-100, 300), (-100, 400), (-100, 500), (-100, 600), (-100, 700), (-100, 850), (0, -100), (100, -100), (200, -100), (300, -100), (400, -100), (500, -100), (600, -100), (700, -100), (800, -100), (950, -100), (950, 0), (950, 100), (950, 200), (950, 300), (950, 400), (950, 500), (950, 600), (950, 700), (950, 850), (-100, 850), (0, 850), (100, 850), (200, 850), (300, 850), (400, 850), (500, 850), (600, 850), (700, 850), (850, 850)]
         self.score = 0
         self.high_score = 0
+        self.espeed = 2.5
 
     def start(self, screen):
         screen.fill((0, 0, 0))
@@ -102,15 +104,15 @@ class Game(pygame.sprite.Sprite):
             distance = sqrt(dx ** 2 + dy ** 2)
             eslope_x = dx / distance
             eslope_y = dy / distance
-            enemy.centerx += eslope_x * 2.5
-            enemy.centery += eslope_y * 2.5
+            enemy.centerx += eslope_x * self.espeed
+            enemy.centery += eslope_y * self.espeed
 
     def p_e_collision(self, screen):
         if self.health <= 0:
             self.active = False
         for enemy in self.enemy_list:
             if self.playerrect.colliderect(enemy):
-                self.health -= random.randint(5, 15)
+                self.health -= self.enemy_damage
                 self.enemy_list.remove(enemy)
                 self.hurts(screen)
 
